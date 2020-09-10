@@ -10,6 +10,9 @@ class Deposit extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_CLOSED = 0;
+
     /**
      * Mass assignable properties
      *
@@ -20,13 +23,13 @@ class Deposit extends Model
         'wallet_id',
         'invested_amount',
         'percentage',
-        'is_active',
+        'status',
         'duration',
         'accrue_times'
     ];
     
-    protected $casts = [
-        'is_active' => 'boolean',
+    protected $attributes = [
+        'status' => self::STATUS_ACTIVE
     ];
 
     /**

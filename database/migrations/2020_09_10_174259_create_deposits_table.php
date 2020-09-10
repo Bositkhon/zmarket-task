@@ -21,7 +21,7 @@ class CreateDepositsTable extends Migration
                 ->constrained();
             $table->decimal('invested_amount')->default(0);
             $table->decimal('percentage')->default(0);
-            $table->boolean('is_active');
+            $table->tinyInteger('status');
             $table->smallInteger('duration');
             $table->smallInteger('accrue_times')->default(0);
             $table->timestamps();
