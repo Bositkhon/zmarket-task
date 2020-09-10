@@ -30,6 +30,9 @@ class CreateWalletsTable extends Migration
      */
     public function down()
     {
+        Schema::table('wallets', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
         Schema::dropIfExists('wallets');
     }
 }
