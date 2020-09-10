@@ -30,4 +30,14 @@ class Wallet extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    /**
+     * Deposits collection that belongs to this wallet
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deposits()
+    {
+        return $this->hasMany(Deposit::class, 'wallet_id', 'id');
+    }
+
 }

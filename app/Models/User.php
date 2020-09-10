@@ -49,4 +49,14 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class, 'user_id', 'id');
     }
 
+    /**
+     * Deposits collection that belongs to this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deposits()
+    {
+        return $this->hasMany(Deposit::class, 'user_id', 'id');
+    }
+
 }
