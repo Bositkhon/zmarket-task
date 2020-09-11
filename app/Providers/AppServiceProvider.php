@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Interfaces\Repositories\WalletRepositoryInterface;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Observers\UserObserver;
+use App\Repositories\WalletRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(WalletRepositoryInterface::class, WalletRepository::class);
     }
 
     /**
