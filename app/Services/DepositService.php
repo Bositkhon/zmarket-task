@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\Models\Deposit;
 
-class DepositService {
+class DepositService
+{
 
     /**
      * Calculates and returns the share of a deposit

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\InsufficientAmount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,11 +26,12 @@ class InvestToDepositFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => [
+            'invested_amount' => [
                 'required',
                 'numeric',
                 'min:10',
-                'max:100'
+                'max:100',
+                new InsufficientAmount()
             ],
             'percentage' => [
                 'required',

@@ -3,10 +3,24 @@
 namespace App\Observers;
 
 use App\Models\User;
-use App\Models\Wallet;
+use App\Interfaces\Repositories\UserRepositoryInterface;
+use App\Interfaces\Repositories\WalletRepositoryInterface;
 
 class UserObserver
 {
+
+    /**
+     * User repository
+     *
+     * @var UserRepositoryInterface
+     */
+    protected $repository;
+
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Handle the user "created" event.
      *
@@ -15,50 +29,6 @@ class UserObserver
      */
     public function created(User $user)
     {
-        $user->wallet()->create();
-    }
-
-    /**
-     * Handle the user "updated" event.
-     *
-     * @param  \App\Models\User  $user
-     * @return void
-     */
-    public function updated(User $user)
-    {
-        //
-    }
-
-    /**
-     * Handle the user "deleted" event.
-     *
-     * @param  \App\Models\User  $user
-     * @return void
-     */
-    public function deleted(User $user)
-    {
-        //
-    }
-
-    /**
-     * Handle the user "restored" event.
-     *
-     * @param  \App\Models\User  $user
-     * @return void
-     */
-    public function restored(User $user)
-    {
-        //
-    }
-
-    /**
-     * Handle the user "force deleted" event.
-     *
-     * @param  \App\Models\User  $user
-     * @return void
-     */
-    public function forceDeleted(User $user)
-    {
-        //
+        $this->repository->createWalletForUser($user);
     }
 }

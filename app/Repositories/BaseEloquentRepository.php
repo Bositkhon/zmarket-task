@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\Repositories\EloquentRepositoryInterface;
 use App\Interfaces\Repositories\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 abstract class BaseEloquentRepository implements EloquentRepositoryInterface
 {
@@ -18,7 +19,9 @@ abstract class BaseEloquentRepository implements EloquentRepositoryInterface
 
     public function create(array $attributes) : Model
     {
-        return $this->model->create($attributes);
+        return DB::transaction(function () use ($attributes) {
+            return $this->model->create($attributes);
+        });
     }
 
     public function find($condition) : ?Model

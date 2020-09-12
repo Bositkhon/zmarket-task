@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\DepositController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +31,5 @@ Route::group([
 Route::group([
     'as' => 'deposit.'
 ], function () {
-    
+    Route::post('invest', [DepositController::class, 'invest'])->name('invest');
 });

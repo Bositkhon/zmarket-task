@@ -22,7 +22,6 @@ class CreateDepositsTable extends Migration
             $table->decimal('invested_amount')->default(0);
             $table->decimal('percentage')->default(0);
             $table->tinyInteger('status');
-            $table->smallInteger('duration');
             $table->smallInteger('accrue_times')->default(0);
             $table->timestamps();
             $table->softDeletes();

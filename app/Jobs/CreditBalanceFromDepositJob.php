@@ -5,30 +5,25 @@ namespace App\Jobs;
 use App\Models\Deposit;
 use Illuminate\Bus\Queueable;
 use App\Services\DepositService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
+use App\Interfaces\Repositories\DepositRepositoryInterface;
+use App\Interfaces\Repositories\WalletRepositoryInterface;
+use Illuminate\Support\Facades\App;
 
-class CreditBalanceFromDeposit implements ShouldQueue
+class CreditBalanceFromDepositJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Deposit model binded to the job
      *
-     * @var \App\Models\Deposit
+     * @var Deposit
      */
     protected $deposit;
-
-    /**
-     * Service corresponding to the model
-     *
-     * @var \App\Services\DepositService
-     */
-    protected $service;
-
 
     /**
      * Timeout value the job to be dispatched
@@ -49,10 +44,9 @@ class CreditBalanceFromDeposit implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(DepositService $service, Deposit $deposit)
+    public function __construct(Deposit $deposit)
     {
         $this->deposit = $deposit;
-        $this->service = $service;
     }
 
     /**
@@ -60,16 +54,14 @@ class CreditBalanceFromDeposit implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(DepositRepositoryInterface $repository, DepositService $service)
     {
-        $deposit = $this->deposit;
-        $wallet = $this->deposit->wallet;
+        $share = $service->getShare($this->deposit);
 
-        $share = $this->service->getShare($deposit);
-        
-        DB::transaction(function () use ($wallet, $deposit, $share) {
-            $wallet->increment('balance', $share);
-            $deposit->increment('accrue_times');
-        });
+        $repository->accrue($this->deposit, $share);
+
+        $repository->incrementWalletBalanceBy($this->deposit, $share);
+
+        $repository->saveAccrueTransaction($this->deposit, $share);
     }
 }

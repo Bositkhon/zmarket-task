@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\InsufficientAmount;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
 
 class DerecogniseFromBalanceFormRequest extends FormRequest
 {
@@ -29,11 +30,7 @@ class DerecogniseFromBalanceFormRequest extends FormRequest
                 'required',
                 'numeric',
                 'min:5',
-                function ($attribute, $value, $fail) {
-                    if ($value > Auth::user()->wallet->balance) {
-                        $fail(__('validation.amount_is_bigger_than_balance', ['attribute' => $attribute]));
-                    }
-                }
+                new InsufficientAmount()
             ]
         ];
     }

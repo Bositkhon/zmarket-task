@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Deposit extends Model
 {
@@ -24,7 +27,6 @@ class Deposit extends Model
         'invested_amount',
         'percentage',
         'status',
-        'duration',
         'accrue_times'
     ];
     
@@ -35,7 +37,7 @@ class Deposit extends Model
     /**
      * User model deposit belongs to
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
@@ -45,11 +47,43 @@ class Deposit extends Model
     /**
      * Waller model deposit belongs to
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function wallet()
     {
         return $this->belongsTo(Wallet::class, 'wallet_id', 'id');
+    }
+
+    /**
+     * Transaction models collection that are related to this model
+     *
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'deposit_id', 'id');
+    }
+
+    /**
+     * Queryies only active deposits
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereStatus(self::STATUS_ACTIVE);
+    }
+
+    /**
+     * Queries only closed deposits
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeClosed($query)
+    {
+        return $query->whereStatus(self::STATUS_CLOSED);
     }
 
 }

@@ -99,15 +99,16 @@
                     @lang('messages.investment')
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form action="{{ route('deposit.invest') }}" method="post">
                         <div class="form-group">
-                            <label for="amount">@lang('messages.amount')</label>
-                            <input type="number" name="amount" value="0.00" step="0.10" class="form-control" id="amount">
+                            <label for="invested_amount">@lang('messages.invested_amount')</label>
+                            <input type="number" name="invested_amount" value="0.00" step="0.10" class="form-control" id="invested_amount">
                         </div>
                         <div class="form-group">
                             <label for="percentage">@lang('messages.percentage')</label>
-                            <input type="number" name="percentage" value="20.0" class="form-control" id="amount" disabled>
+                            <input type="number" name="percentage" value="20.0" class="form-control" id="amount" readonly>
                         </div>
+                        @csrf
                         <button type="submit" class="btn btn-info text-light">@lang('messages.invest')</button>
                     </form>
                 </div>

@@ -20,4 +20,6 @@ return [
     'balance' => 'Баланс',
     'replenish_success' => 'Баланс успешно пополнен',
     'derecognise_success' => 'Деньги были успешно сняты с баланса',
+    'invested_amount' => 'Сумма вклада',
+    'invest_success' => 'Депозитный счет был успешно пополнен'
 ];

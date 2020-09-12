@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\Repositories\WalletRepositoryInterface;
 use App\Models\Wallet;
+use Illuminate\Support\Facades\DB;
 
 class WalletRepository extends BaseEloquentRepository implements WalletRepositoryInterface
 {
@@ -22,7 +23,9 @@ class WalletRepository extends BaseEloquentRepository implements WalletRepositor
      */
     public function incrementBalance(Wallet $wallet, $amount): void
     {
-        $wallet->increment('balance', $amount);
+        Db::transaction(function () use ($wallet, $amount) {
+            $wallet->increment('balance', $amount);
+        });
     }
 
     /**
@@ -34,6 +37,8 @@ class WalletRepository extends BaseEloquentRepository implements WalletRepositor
      */
     public function decrementBalance(Wallet $wallet, $amount): void
     {
-        $wallet->decrement('balance', $amount);
+        DB::transaction(function () use ($wallet, $amount) {
+            $wallet->decrement('balance', $amount);
+        });
     }
 }
