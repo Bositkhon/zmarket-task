@@ -48,7 +48,7 @@ class CreditBalanceFromDepositJob implements ShouldQueue
         $repository->accrue($this->deposit, $share);
 
         if ($this->attempts() != $this->tries) {
-            $this->release(60);            
+            $this->release(60);
         }
     }
 
