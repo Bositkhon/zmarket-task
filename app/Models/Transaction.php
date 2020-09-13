@@ -14,6 +14,20 @@ class Transaction extends Model
     const TYPE_ACCRUE = 2;
     const TYPE_CLOSE_DEPOSIT = 3;
 
+    public function getTypeAttribute()
+    {
+        return self::getTypeAttributeNames()[$this->attributes['type']];
+    }
+
+    public static function getTypeAttributeNames()
+    {
+        return [
+            self::TYPE_CREATE_DEPOSIT => __('messages.type_create_deposit'),
+            self::TYPE_ACCRUE => __('messages.type_accrue'),
+            self::TYPE_CLOSE_DEPOSIT => __('messages.type_close_deposit'),
+        ];
+    }
+
     /**
      * Mass assignable properties
      *

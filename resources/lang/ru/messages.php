@@ -21,5 +21,11 @@ return [
     'replenish_success' => 'Баланс успешно пополнен',
     'derecognise_success' => 'Деньги были успешно сняты с баланса',
     'invested_amount' => 'Сумма вклада',
-    'invest_success' => 'Депозитный счет был успешно пополнен'
+    'invest_success' => 'Депозитный счет был успешно пополнен',
+    'status_active' => 'Активный',
+    'status_closed' => 'Закрытый',
+    'type_create_deposit' => 'CREATE_DEPOSIT',
+    'type_accrue' => 'ACCRUE',
+    'type_close_deposit' => 'CLOSE_DEPOSIT',
+    'created_at' => 'Дата создания'
 ];

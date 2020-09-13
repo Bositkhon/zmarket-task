@@ -2,19 +2,18 @@
 
 namespace App\Providers;
 
-use App\Interfaces\Repositories\DepositRepositoryInterface;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Deposit;
 use App\Observers\UserObserver;
+use App\Observers\DepositObserver;
 use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Auth;
 use App\Repositories\WalletRepository;
+use App\Repositories\DepositRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\Repositories\UserRepositoryInterface;
 use App\Interfaces\Repositories\WalletRepositoryInterface;
-use App\Models\Deposit;
-use App\Observers\DepositObserver;
-use App\Repositories\DepositRepository;
+use App\Interfaces\Repositories\DepositRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {

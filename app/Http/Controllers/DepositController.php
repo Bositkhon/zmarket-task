@@ -6,8 +6,11 @@ use App\Services\UserService;
 use App\Services\DepositService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\CreditBalanceFromDepositJob;
 use App\Http\Requests\InvestToDepositFormRequest;
 use App\Interfaces\Repositories\DepositRepositoryInterface;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Bus;
 
 class DepositController extends Controller
 {
@@ -24,7 +27,11 @@ class DepositController extends Controller
 
     public function invest(InvestToDepositFormRequest $request, UserService $userService)
     {
-        $this->repository->createDepositForUser(Auth::user(), $request->validated());
+        $deposit = $this->repository->createDepositForUser(Auth::user(), $request->validated());
+
+        Artisan::call('credit:balance', [
+            'deposit' => $deposit->id
+        ]);
 
         return back()->with([
             'success' => __('messages.invest_success')

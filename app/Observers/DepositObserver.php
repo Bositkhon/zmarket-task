@@ -18,7 +18,7 @@ class DepositObserver
     /**
      * Deposit repository
      *
-     * @var DepositRepository
+     * @var DepositRepositoryInterface
      */
     protected $repository;
 
@@ -40,7 +40,7 @@ class DepositObserver
      */
     public function created(Deposit $deposit)
     {
-        $this->repository->decreaseWalletBalanceByInvestedAmount($deposit);
+        $this->repository->decrementWalletBalanceBy($deposit, $deposit->invested_amount);
         
         $this->repository->saveCreatedTransaction($deposit);
     }
