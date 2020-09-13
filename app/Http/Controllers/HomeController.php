@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ReplenishWalletFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ReplenishWalletFormRequest;
+use App\Interfaces\Repositories\DepositRepositoryInterface;
 
 class HomeController extends Controller
 {
+
+    protected $repository;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(DepositRepositoryInterface $repository)
     {
         $this->middleware('auth');
+
+        $this->repository = $repository;
     }
 
     /**
@@ -24,6 +31,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $deposits = Auth::user()->deposits;
+        $transactions = Auth::user()->transactions;
+        return view('home', compact('deposits', 'transactions'));
     }
 }

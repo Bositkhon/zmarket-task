@@ -53,6 +53,7 @@ class DepositRepository extends BaseEloquentRepository implements DepositReposit
      * Decreases wallet balance by given amount
      *
      * @param Deposit $deposit
+     * @param int $amount
      * @return void
      */
     public function decrementWalletBalanceBy(Deposit $deposit, $amount) : void
@@ -116,15 +117,6 @@ class DepositRepository extends BaseEloquentRepository implements DepositReposit
         });
     }
 
-    public function setStatus(Deposit $deposit, int $status) : void
-    {
-        Db::transaction(function () use ($deposit, $status) {
-            $deposit->update([
-                'status' => $status
-            ]);
-        });
-    }
-
     public function saveStatusClosedTransaction(Deposit $deposit)
     {
         return Db::transaction(function () use ($deposit) {
@@ -135,6 +127,16 @@ class DepositRepository extends BaseEloquentRepository implements DepositReposit
                 'deposit_id' => $deposit->id,
                 'amount' => 0
             ]);
+        });
+    }
+
+    public function markStatusAsClosed(Deposit $deposit): void
+    {
+        DB::transaction(function () use ($deposit) {
+            $deposit->update([
+                'status' => Deposit::STATUS_CLOSED
+            ]);
+            $this->saveStatusClosedTransaction($deposit);
         });
     }
 

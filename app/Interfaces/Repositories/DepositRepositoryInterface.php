@@ -16,7 +16,7 @@ interface DepositRepositoryInterface
     public function getActiveDeposits() : Collection;
     public function createDepositForUser(User $user, array $attributes) : Deposit;
     public function accrue(Deposit $deposit, $share) : void;
-    public function setStatus(Deposit $deposit, int $status) : void;
     public function decrementWalletBalanceBy(Deposit $deposit, $amount) : void;
     public function incrementWalletBalanceBy(Deposit $deposit, $amount) : void;
+    public function markStatusAsClosed(Deposit $deposit) : void;
 }

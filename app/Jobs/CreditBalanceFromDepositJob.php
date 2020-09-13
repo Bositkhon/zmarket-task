@@ -3,16 +3,15 @@
 namespace App\Jobs;
 
 use App\Models\Deposit;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use App\Services\DepositService;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Interfaces\Repositories\DepositRepositoryInterface;
-use App\Interfaces\Repositories\WalletRepositoryInterface;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Redis;
 
 class CreditBalanceFromDepositJob implements ShouldQueue
 {
@@ -26,20 +25,6 @@ class CreditBalanceFromDepositJob implements ShouldQueue
     protected $deposit;
 
     /**
-     * Timeout value the job to be dispatched
-     *
-     * @var integer
-     */
-    public $timeout = 60;
-
-    /**
-     * The number of dispatches needs to be done
-     *
-     * @var integer
-     */
-    public $tries = 10;
-
-    /**
      * Create a new job instance.
      *
      * @return void
@@ -48,6 +33,8 @@ class CreditBalanceFromDepositJob implements ShouldQueue
     {
         $this->deposit = $deposit;
     }
+
+    public $tries = 10;
 
     /**
      * Execute the job.
@@ -60,8 +47,14 @@ class CreditBalanceFromDepositJob implements ShouldQueue
 
         $repository->accrue($this->deposit, $share);
 
-        $repository->incrementWalletBalanceBy($this->deposit, $share);
-
-        $repository->saveAccrueTransaction($this->deposit, $share);
+        if ($this->attempts() != $this->tries) {
+            $this->release(5);            
+        }
     }
+
+    public function getDeposit() : Deposit
+    {
+        return $this->deposit;
+    }
+
 }

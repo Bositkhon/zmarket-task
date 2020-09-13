@@ -10,6 +10,7 @@ use App\Jobs\CreditBalanceFromDeposit;
 use App\Jobs\CreditBalanceFromDepositJob;
 use App\Models\Deposit;
 use App\Services\DepositService;
+use Illuminate\Support\Facades\Queue;
 
 class CreditUsersBalanceFromDepositCommand extends Command
 {
@@ -18,7 +19,7 @@ class CreditUsersBalanceFromDepositCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'credit:users';
+    protected $signature = 'credit:balance {deposit}';
 
     /**
      * The console command description.
@@ -27,7 +28,6 @@ class CreditUsersBalanceFromDepositCommand extends Command
      */
     protected $description = 'Credits all users balances from their deposits';
 
-    protected $depositRepository;
 
     /**
      * Create a new command instance.
@@ -46,17 +46,15 @@ class CreditUsersBalanceFromDepositCommand extends Command
      */
     public function handle(DepositRepositoryInterface $depositRepository, DepositService $depositService)
     {
-        $deposits = $depositRepository->getActiveDeposits();
+        $deposit = Deposit::find($this->argument('deposit'));
+        
+        dispatch(new CreditBalanceFromDepositJob($deposit))
+            ->chain([
+                function () use ($depositRepository, $deposit) {
+                    $depositRepository->markStatusAsClosed($deposit);
+                },
+            ]);
 
-        $deposits->each(function ($deposit) use ($depositRepository, $depositService) {
-            $this->line("Credit info:");
-            $this->line("User: {$deposit->user->name}");
-            $this->line("Share: {$depositService->getShare($deposit)}");
-
-            dispatch(new CreditBalanceFromDepositJob($deposit));
-
-            $depositRepository->setStatus($deposit, Deposit::STATUS_CLOSED);
-        });
 
         return 0;
     }

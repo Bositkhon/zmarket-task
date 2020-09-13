@@ -16,6 +16,19 @@ class Deposit extends Model
     const STATUS_ACTIVE = 1;
     const STATUS_CLOSED = 0;
 
+    public function getStatusAttribute()
+    {
+        return self::getStatusAttibuteNames()[$this->attributes['status']];
+    }
+
+    public static function getStatusAttibuteNames()
+    {
+        return [
+            self::STATUS_ACTIVE => __('messages.status_active'),
+            self::STATUS_CLOSED => __('messages.status_closed')
+        ];
+    }
+
     /**
      * Mass assignable properties
      *
